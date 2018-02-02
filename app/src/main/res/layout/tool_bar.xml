@@ -4,6 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary"
+
+
     >
 
     <ImageButton
@@ -11,6 +13,9 @@
         style="@style/botones"
         android:src="@mipmap/ic_borrar_bar"
         android:background="@color/colorPrimary"
+        android:layout_gravity="center"
+
+
         />
 
     <!--<Space style="@style/espacio"/>-->
@@ -20,6 +25,8 @@
         style="@style/botones"
         android:src="@mipmap/ic_guardar"
         android:background="@color/colorPrimary"
+        android:layout_gravity="center"
+
 
         />
 
@@ -28,6 +35,7 @@
         style="@style/botones"
         android:src="@mipmap/ic_crear_categoria"
         android:background="@color/colorPrimary"
+        android:layout_gravity="center"
 
         />
 
@@ -36,6 +44,7 @@
         style="@style/botones"
         android:src="@mipmap/agregar_nota"
         android:background="@color/colorPrimary"
+        android:layout_gravity="center"
 
         />
 </android.support.v7.widget.Toolbar>

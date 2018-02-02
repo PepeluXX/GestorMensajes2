@@ -150,7 +150,7 @@ public class ListaMensajes extends AppCompatActivity implements NavigationView.O
         }
 
 
-        if(nombres_tablas.size()>0){
+       /* if(nombres_tablas.size()>0){
 
             texto.setText("\n-----Tiene mensajes sin leer de:----");
 
@@ -164,7 +164,7 @@ public class ListaMensajes extends AppCompatActivity implements NavigationView.O
             para=para.replace("!","");
             texto2.setText(para);
 
-        }
+        }*/
         db.close();
 
 

@@ -1,6 +1,7 @@
 package com.example.lourdes.gestormensajes;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -9,7 +10,12 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -217,6 +223,33 @@ public class TodosLeidosFragment extends Fragment {
 
                             String titulo = boton.getText().toString();
                             titulo = titulo.substring(0, titulo.indexOf("\n"));
+
+                            //LLAMADA A FRAGMENT
+                            Bundle datos = new Bundle();
+                            datos.putInt("id",boton.getId());
+                            datos.putString("titulo",titulo);
+                            datos.putString("tabla","'"+nombre_tabla+"'");
+
+
+                            Fragment fragment =new FragmentMuestraMensaje2();
+                            fragment.setArguments(datos);
+                            FragmentManager fragmentManager = getFragmentManager();
+                            fragmentManager.popBackStack("root_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                            FragmentTransaction ft = fragmentManager.beginTransaction();
+                            ft.replace(R.id.screen_area,fragment).addToBackStack("root_fragment");
+                            ft.commit();
+
+                            //LLAMADA A DIALOG FRAGMENT
+                            /*
+                            FragmentMuestraMensaje f = FragmentMuestraMensaje.newInstance(boton.getId(),titulo,"'"+nombre_tabla+"'");
+
+                            FragmentTransaction ft =getFragmentManager().beginTransaction();
+                            f.show(ft,"muestra");
+                            */
+                            /*
+                            //LLAMADA A ACTIVITY
+                            String titulo = boton.getText().toString();
+                            titulo = titulo.substring(0, titulo.indexOf("\n"));
                             //Crear intento para iniciar una nueva actividad
                             Intent intent = new Intent(getActivity(), MuestraMensaje.class);
                             //Añadir datos al intento para que los use la actividad que se va a iniciar
@@ -229,6 +262,7 @@ public class TodosLeidosFragment extends Fragment {
                             startActivity(intent);
                             //Finalizamos la actividad actual
                             getActivity().finish();
+                            */
 
                         }
                     });
@@ -241,6 +275,53 @@ public class TodosLeidosFragment extends Fragment {
 
                             String titulo = boton.getText().toString();
                             titulo = titulo.substring(0, titulo.indexOf("\n"));
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            // Add the buttons
+
+                            builder.setMessage("¿Seguro que quiere borrar este mensaje?")
+                                    .setTitle("Borrar");
+
+                            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // User clicked OK button
+                                    //Para escribir o borrar datos en la BBDD
+                                    BDDHelper miOtroHelper = new BDDHelper(getActivity());
+                                    SQLiteDatabase db = miOtroHelper.getWritableDatabase();
+
+                                    //Definir WHERE de la consulta
+                                    String selection = "id LIKE ?";
+                                    //Definir parámetros de la consulta
+                                    String []selectionArgs = {String.valueOf(id)};
+
+                                    //Ejecutar consulta
+                                    db.delete("'"+nombre_tabla+"'",selection,selectionArgs);
+                                    //Cerrar la conexión con la BBDD
+                                    db.close();
+
+                                    Fragment fragment = null;
+                                    fragment= new TodosLeidosFragment();
+                                    Log.d("desde","hola estamo en todos leidos");
+                                    FragmentManager fragmentManager = getFragmentManager();
+                                    fragmentManager.popBackStack("root_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                    FragmentTransaction ft = fragmentManager.beginTransaction();
+                                    ft.replace(R.id.screen_area,fragment).addToBackStack("root_fragment");
+                                    ft.commit();
+
+                                }
+                            });
+                            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // User cancelled the dialog
+                                }
+                            });
+                            // Set other dialog properties
+
+
+                            // Create the AlertDialog
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
+
+                            /*
                             //Crear intento para iniciar una nueva actividad
                             Intent intent = new Intent(getActivity(), ConfirmarBorradoMensaje.class);
                             //Añadir datos al intento para que los use la actividad que se va a iniciar
@@ -252,8 +333,8 @@ public class TodosLeidosFragment extends Fragment {
                             //Comenzamos la nueva actividad
                             startActivity(intent);
                             //Finalizamos la actividad actual
-                            getActivity().finish();
-
+                            //getActivity().finish();
+                            */
                         }
                     });
 
@@ -311,5 +392,9 @@ public class TodosLeidosFragment extends Fragment {
         int pxx = Math.round(px);
         return pxx;
     }
+
+
+
+
 
 }

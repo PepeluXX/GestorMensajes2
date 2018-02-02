@@ -1,5 +1,6 @@
 package com.example.lourdes.gestormensajes;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -9,6 +10,8 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -35,7 +38,7 @@ public class SinLeerFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         //Para conectar con la BBDD
-        BDDHelper miHelper = new BDDHelper(getActivity());
+        final BDDHelper miHelper = new BDDHelper(getActivity());
 
 
         ArrayList<Integer>cuenta=new ArrayList<Integer>();
@@ -217,19 +220,34 @@ public class SinLeerFragment extends Fragment {
                     boton.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
 
+
                             String titulo = boton.getText().toString();
                             titulo = titulo.substring(0, titulo.indexOf("\n"));
-                            //Crear intento para iniciar una nueva actividad
-                            Intent intent = new Intent(getActivity(), MuestraMensaje.class);
-                            //Añadir datos al intento para que los use la actividad que se va a iniciar
-                            intent.putExtra("titulo", titulo);
-                            intent.putExtra("nombre_tabla", "'" + nombre_tabla + "'");
-                            intent.putExtra("id_mensaje", boton.getId());
-                            intent.putExtra("fragmento", "sin_leer");
-                            //Comenzamos la nueva actividad
-                            startActivity(intent);
-                            //Finalizamos la actividad actual
-                            getActivity().finish();
+
+
+                            //LLAMADA A FRAGMENT
+                            Bundle datos = new Bundle();
+                            datos.putInt("id",boton.getId());
+                            datos.putString("titulo",titulo);
+                            datos.putString("tabla","'"+nombre_tabla+"'");
+
+
+                            Fragment fragment =new FragmentMuestraMensaje2();
+                            fragment.setArguments(datos);
+                            FragmentManager fragmentManager = getFragmentManager();
+                           // fragmentManager.popBackStack("root_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                            FragmentTransaction ft = fragmentManager.beginTransaction();
+                            ft.replace(R.id.screen_area,fragment).addToBackStack("root_fragment");
+                            ft.commit();
+
+                            //LLAMADA A DIALOG FRAGMENT
+                            /*
+                            FragmentMuestraMensaje f = FragmentMuestraMensaje.newInstance(boton.getId(),titulo,"'"+nombre_tabla+"'");
+
+                            FragmentTransaction ft =getFragmentManager().beginTransaction();
+                            f.show(ft,"muestra");
+                            */
+
 
                         }
                     });

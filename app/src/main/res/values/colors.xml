@@ -8,7 +8,7 @@
     <color name="colorTextoTituloNoLeido">#121312</color>
     <color name="backGroundListaMensajes">#6EF274</color>
     <color name="colorBordeLayoutListaMensajes">#bfe841</color>
-    <color name="fondo">#f3fcea</color>
+    <color name="fondo">#ffffff</color>
     <color name="fondo_layout_fila_curso">#fff6f6</color>
     <color name="fondo_layout_fila_hijo">#f7fff1</color>
     <color name="fondo_layout_fila_general">#fcf4e0</color>

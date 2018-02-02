@@ -79,6 +79,7 @@ public class ConfirmarBorradoMensaje extends AppCompatActivity {
         cancela.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+             /*
                 //Crear intento para iniciar nueva actividad
                 Intent intent = new Intent(getApplicationContext(), MuestraMensaje.class);
                 //Poner datos en el intento para que los use la actividad que se va a iniciar
@@ -87,7 +88,7 @@ public class ConfirmarBorradoMensaje extends AppCompatActivity {
                 intent.putExtra("titulo",datos.getString("titulo"));
                 intent.putExtra("fragmento",datos.getString("fragmento"));
                 //Comenzar nueva actividad
-                startActivity(intent);
+                startActivity(intent);*/
                 //Finalizar actividad actual
                 finish();
             }

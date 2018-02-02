@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -184,17 +186,20 @@ public class GeneralFragment extends android.support.v4.app.Fragment {
 
                                 String titulo = boton.getText().toString();
                                 titulo = titulo.substring(0, titulo.indexOf("\n"));
-                                //Crear intento para iniciar una nueva actividad
-                                Intent intent = new Intent(getActivity(), MuestraMensaje.class);
-                                //Añadir datos al intento para que los use la actividad que se va a iniciar
-                                intent.putExtra("titulo", titulo);
-                                intent.putExtra("nombre_tabla", "'" + nombre_tabla + "'");
-                                intent.putExtra("id_mensaje", boton.getId());
-                                intent.putExtra("fragmento", "gen");
-                                //Comenzamos la nueva actividad
-                                startActivity(intent);
-                                //Finalizamos la actividad actual
-                                getActivity().finish();
+                                //LLAMADA A FRAGMENT
+                                Bundle datos = new Bundle();
+                                datos.putInt("id",boton.getId());
+                                datos.putString("titulo",titulo);
+                                datos.putString("tabla","'"+nombre_tabla+"'");
+
+
+                                android.support.v4.app.Fragment fragment =new FragmentMuestraMensaje2();
+                                fragment.setArguments(datos);
+                                FragmentManager fragmentManager = getFragmentManager();
+                                fragmentManager.popBackStack("root_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                FragmentTransaction ft = fragmentManager.beginTransaction();
+                                ft.replace(R.id.screen_area,fragment).addToBackStack("root_fragment");
+                                ft.commit();
 
                             }
                         });
@@ -217,7 +222,7 @@ public class GeneralFragment extends android.support.v4.app.Fragment {
                                 //Comenzamos la nueva actividad
                                 startActivity(intent);
                                 //Finalizamos la actividad actual
-                                getActivity().finish();
+                                //getActivity().finish();
 
                             }
                         });
