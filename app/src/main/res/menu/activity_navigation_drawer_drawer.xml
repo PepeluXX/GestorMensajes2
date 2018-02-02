@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_cursos"
+            android:icon="@drawable/ic_grupo"
+            android:title="Por Cursos" />
+        <item
+            android:id="@+id/nav_hijos"
+            android:icon="@drawable/ic_hijo"
+            android:title="Por Hijos" />
+        <item
+            android:id="@+id/nav_general"
+            android:icon="@drawable/ic_general"
+            android:title="Generales" />
+        <item
+            android:id="@+id/nav_sin_leer"
+            android:icon="@drawable/ic_sinleer"
+            android:title="Sin Leer" />
+        <item
+            android:id="@+id/nav_todos_leidos"
+            android:icon="@drawable/ic_leidos"
+            android:title="Ver Todos Leídos" />
+        <item
+            android:id="@+id/nav_categorizados"
+            android:icon="@drawable/ic_categorizados"
+            android:title="Categorizados" />
+        <item
+            android:id="@+id/nav_acerca_de"
+            android:icon="@drawable/ic_acercade"
+            android:title="Acerca de" />
+    </group>
+
+
+
+</menu>

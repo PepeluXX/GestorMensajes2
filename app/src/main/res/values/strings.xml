@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">ActivacionBeta</string>
+    <string name="texto_bienvenida">Bienvenido a la aplicación para la gestión de Avisos y Mensajes. Introduzca sus datos
+    para continuar.</string>
+    <string name="instrucciones_categorias">
+        Cree una categoría, por ejemplo \"Importantes\" o \"Sobre reuniones\", si desea clasificar la información.
+        Se pueden crear y eliminar las categorías que se deseen, los mensajes pertenecientes a una categoría
+        no se eliminarán.
+    </string>
+
+    <string name="no_categorias">No existen categorías para eliminar</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_auxiliar">Auxiliar</string>
+    <string name="title_activity_navigation_drawer">NavigationDrawer</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nota_main">Trabajo Fin de Grado.\nUniversidad de Jaén. Grado en Telemática.\nDesarrollado por: Jose Luis Fernández-Piñar Padial.
+                            \nTutor: Juan Carlos Cuevas Martinez.</string>
+    <string name="action_settings">Settings</string>
+</resources>

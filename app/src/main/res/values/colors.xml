@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#7b8ef6</color>
+    <color name="colorSecondary">#eaedfd</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorTextoTitulo">#676967</color>
+    <color name="colorTextoTituloNoLeido">#121312</color>
+    <color name="backGroundListaMensajes">#6EF274</color>
+    <color name="colorBordeLayoutListaMensajes">#bfe841</color>
+    <color name="fondo">#f3fcea</color>
+    <color name="fondo_layout_fila_curso">#fff6f6</color>
+    <color name="fondo_layout_fila_hijo">#f7fff1</color>
+    <color name="fondo_layout_fila_general">#fcf4e0</color>
+    <color name="fondo_layout_fila_categorizados">#ffe0f2</color>
+    <color name="colorBordeChilds">#c1c4b8</color>
+    <color name="colorBordeSeparacion">#A4C739</color>
+    <color name="colorBotonNormal">#D4D5D4</color>
+    <color name="color_editText_main_activity">#cce4c4</color>
+
+</resources>

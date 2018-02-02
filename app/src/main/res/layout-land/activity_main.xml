@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorSecondary"
+    tools:context="com.example.lourdes.gestormensajes.MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="16dp">
+
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_main_activity"
+            android:text="@string/texto_bienvenida"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:typeface="normal" />
+
+        <TextView
+            android:id="@+id/textViewDNI"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_main_activity"
+            android:text="Identificación:"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:typeface="normal" />
+
+        <EditText
+            android:id="@+id/editTextDNI"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/white"
+            android:ems="10"
+            android:hint="Su DNI aquí"
+            android:inputType="textPersonName"
+            android:padding="@dimen/padding_main_activity"
+            android:textSize="@dimen/texto_main_activity" />
+
+        <TextView
+            android:id="@+id/textViewPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_main_activity"
+            android:text="Password:"
+            android:textSize="@dimen/texto_main_activity"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="84dp"
+            tools:layout_editor_absoluteY="246dp" />
+
+        <EditText
+            android:id="@+id/editTextPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:ems="10"
+            android:hint="Su password aquí"
+            android:inputType="textPassword"
+            android:padding="@dimen/padding_main_activity"
+            android:textSize="@dimen/texto_main_activity" />
+
+        <Button
+            android:id="@+id/botonRegistro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Registrarse en el Servicio"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="193dp" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center_horizontal"
+            app:srcCompat="@drawable/logouja"
+            tools:layout_editor_absoluteX="121dp"
+            tools:layout_editor_absoluteY="400dp" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/nota_main"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+</ScrollView>

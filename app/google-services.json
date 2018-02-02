@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "538779798799",
+    "firebase_url": "https://gestormensajes.firebaseio.com",
+    "project_id": "gestormensajes",
+    "storage_bucket": "gestormensajes.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:538779798799:android:7bc10122b8fe8b1b",
+        "android_client_info": {
+          "package_name": "com.example.lourdes.gestormensajes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "538779798799-ob04lese7mf4ru6d51qgrn58ivb62l5l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.lourdes.gestormensajes",
+            "certificate_hash": "c857e66383eb37607f87d9ab34878db91087e2e3"
+          }
+        },
+        {
+          "client_id": "538779798799-0q4fuqeutc21hl62sdvahk5nkkjhj4m5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0mCTSqXcQL80vBWFqv32hIKTnkVsLXtg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "538779798799-0q4fuqeutc21hl62sdvahk5nkkjhj4m5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

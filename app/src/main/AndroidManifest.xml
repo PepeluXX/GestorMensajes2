@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.lourdes.gestormensajes">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service android:name=".InstanciacionIDServicioFirebase">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".ServicioFirebaseMessaging">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity android:name=".ListaMensajes" />
+        <activity
+            android:name=".Auxiliar"
+            android:label="@string/title_activity_auxiliar"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".MuestraMensaje" />
+        <activity android:name=".ConfirmarBorradoMensaje" />
+        <activity android:name=".GuardarEnCategoria" />
+        <activity android:name=".CrearCategoria" />
+        <activity android:name=".BorrarCategorias" />
+        <activity android:name=".ConfirmarBorradoCategoria" />
+        <activity
+            android:name=".NavigationDrawer"
+            android:label="@string/title_activity_navigation_drawer"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".ParaFragmentos" />
+        <activity android:name=".CrearNota" />
+        <activity android:name=".MuestraMensajesCategorias"></activity>
+    </application>
+
+</manifest>
