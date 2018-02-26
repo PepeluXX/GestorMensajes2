@@ -343,6 +343,7 @@ public class PorCursosFragment extends Fragment {
         db.close();
 
 
+
         android.support.v4.app.Fragment fragment = null;
         fragment= new PorCursosFragment();
         Log.d("desde","hola estamo en fragment por cursos");
