@@ -77,7 +77,7 @@ public class ElegirCategoriaFragment extends Fragment {
                         LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                 param_layout_fila.height = convertDpToPixel(230, getActivity());
                 layout_fila.setOrientation(LinearLayout.HORIZONTAL);
-                layout_fila.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.fondo_layout_fila_categorizados));
+                layout_fila.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.fondo));
 
 
                 //CREAMOS EL BOTÓN
@@ -95,7 +95,7 @@ public class ElegirCategoriaFragment extends Fragment {
                 boton.setId(i);
 
                 boton.setText(cursor.getString(0));
-                boton.setBackgroundColor(getResources().getColor(R.color.fondo_layout_fila_curso));
+               // boton.setBackgroundColor(getResources().getColor(R.color.fondo_layout_fila_curso));
 
                 // Se pone el boton principal a la escucha de ser pulsado
                 boton.setOnClickListener(new View.OnClickListener() {
@@ -108,7 +108,7 @@ public class ElegirCategoriaFragment extends Fragment {
                             fragment.setArguments(datos);
                             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                             FragmentTransaction ft = fragmentManager.beginTransaction();
-                            ft.replace(R.id.screen_area, fragment).addToBackStack(null);
+                            ft.replace(R.id.screen_area, fragment).addToBackStack("root_fragment");
                             ft.commit();
                         }
                         //Finalizamos la actividad actual
@@ -161,8 +161,22 @@ public class ElegirCategoriaFragment extends Fragment {
         int id= item.getItemId();
 
         if(id==R.id.action_settings){
-            Intent intent2 = new Intent(getActivity().getApplicationContext(),CrearCategoria.class);
-            startActivity(intent2);
+           /* Intent intent2 = new Intent(getActivity().getApplicationContext(),CrearCategoria.class);
+            startActivity(intent2);*/
+
+            Fragment fragment = new CrearCategoriaFragment();
+            //Bundle datos = new Bundle();
+            //datos.putString("categoria",categoria);
+           // fragment.setArguments(datos);
+
+
+            if (fragment != null) {
+                FragmentManager fragmentManager = getFragmentManager();
+                //fragmentManager.popBackStack("root_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                FragmentTransaction ft = fragmentManager.beginTransaction();
+                ft.replace(R.id.screen_area, fragment).addToBackStack("root_fragment");
+                ft.commit();
+            }
             return true;
         }
 

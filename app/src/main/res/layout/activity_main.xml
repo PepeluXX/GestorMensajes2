@@ -74,7 +74,7 @@
             android:id="@+id/botonRegistro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Registrarse en el Servicio"
+            android:text="Entrar en el Servicio"
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="193dp" />
 

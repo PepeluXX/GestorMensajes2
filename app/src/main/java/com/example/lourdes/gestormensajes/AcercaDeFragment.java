@@ -3,9 +3,11 @@ package com.example.lourdes.gestormensajes;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 /**
  * Created by Lourdes on 24/01/2018.
@@ -18,6 +20,11 @@ public class AcercaDeFragment extends Fragment {
 
 
         super.onViewCreated(view, savedInstanceState);
+
+        TextView t2 = (TextView) view.findViewById(R.id.text2);
+        t2.setMovementMethod(LinkMovementMethod.getInstance());
+
+
     }
 
     @Nullable

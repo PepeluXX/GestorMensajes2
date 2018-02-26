@@ -102,7 +102,7 @@ public class FragmentMuestraMensaje extends DialogFragment {
         View view = inflater.inflate(R.layout.fragment_muestra_mensaje, container, false);
 
         FloatingActionButton fab = (FloatingActionButton)view.findViewById(R.id.fab);
-        fab.setImageResource(R.mipmap.leer_nota);
+        fab.setImageResource(R.mipmap.ic_leer_nota);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

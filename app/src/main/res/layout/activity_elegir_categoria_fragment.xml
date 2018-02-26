@@ -19,8 +19,17 @@
         <TextView
             android:id="@+id/texto_no_categorias"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:text="Eliga una categoría:"
+            android:textSize="22sp"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal"
+            android:padding="30dp"
+            android:layout_weight="1"/>
 
     </LinearLayout>
+
+
+
 
 </ScrollView>

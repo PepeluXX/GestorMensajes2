@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 
@@ -26,7 +27,11 @@ public class SharedPrefManager {
     //Darle nombre a uno de los datos que se van almacenar
     private static final String KEY_TOKEN = "token";
 
-    //private static boolean no_leido_en_hijos =false;
+    //para controlar si se cerró o no sesion, para mostrar o no el formulario
+    private static final String SESION ="sesion";
+
+    //para comprobar si el registro inicial se realizó o no
+    private static final String REGISTRADO = "registrado";
 
 
     //Constructor de la clase
@@ -41,6 +46,80 @@ public class SharedPrefManager {
             mInstance = new SharedPrefManager(context);
         return mInstance;
     }
+
+    //crea la variable con la que se contralará si la sesión se cierra o no
+    public int creaVariableRegistrado(){
+        //Para acceder a los datos
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME,Context.MODE_PRIVATE);
+        //Para editar los datos
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        //Guardar el token con key 'KEY_TOKEN'
+        editor.putInt(REGISTRADO,0);
+        //Aplicar para guardar datos
+        editor.apply();
+        return 0;
+
+    }
+
+    public int getRegistrado(){
+        //Crear objeto de la clase SharedPreferences para acceder a sus datos
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME,Context.MODE_PRIVATE);
+        //Tomar el dato guardado identificándolo con su key y devolverlo
+        //si la variable sesion no se ha creado aún, devuelve 0
+        return sharedPreferences.getInt(REGISTRADO,2);
+    }
+
+    public boolean switchRegistrado(int registrado){
+        //Para acceder a los datos
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME,Context.MODE_PRIVATE);
+        //Para editar los datos
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        //Guardar el token con key 'KEY_TOKEN'
+        editor.putInt(REGISTRADO,registrado);
+        //Aplicar para guardar datos
+        editor.apply();
+        return true;
+
+    }
+
+
+
+    //crea la variable con la que se contralará si la sesión se cierra o no
+    public int creaVariableSesion(){
+        //Para acceder a los datos
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME,Context.MODE_PRIVATE);
+        //Para editar los datos
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        //Guardar el token con key 'KEY_TOKEN'
+        editor.putInt(SESION,0);
+        //Aplicar para guardar datos
+        editor.apply();
+        return 0;
+
+    }
+
+    public int getSesion(){
+        //Crear objeto de la clase SharedPreferences para acceder a sus datos
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME,Context.MODE_PRIVATE);
+        //Tomar el dato guardado identificándolo con su key y devolverlo
+        //si la variable sesion no se ha creado aún, devuelve 0
+        return sharedPreferences.getInt(SESION,2);
+    }
+
+
+    public boolean switchSesion(int sesion){
+        //Para acceder a los datos
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME,Context.MODE_PRIVATE);
+        //Para editar los datos
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        //Guardar el token con key 'KEY_TOKEN'
+        editor.putInt(SESION,sesion);
+        //Aplicar para guardar datos
+        editor.apply();
+        return true;
+
+    }
+
 
 
     /*

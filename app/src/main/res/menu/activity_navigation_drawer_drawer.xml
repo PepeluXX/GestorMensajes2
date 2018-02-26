@@ -32,6 +32,10 @@
             android:id="@+id/nav_acerca_de"
             android:icon="@drawable/ic_acercade"
             android:title="Acerca de" />
+        <item
+            android:id="@+id/nav_cerrar"
+            android:icon="@drawable/ic_cerrar"
+            android:title="Cerrar" />
     </group>
 
 

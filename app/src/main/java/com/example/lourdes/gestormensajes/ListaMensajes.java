@@ -1,6 +1,9 @@
 package com.example.lourdes.gestormensajes;
 
+import android.app.NotificationManager;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -16,6 +19,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -73,25 +77,46 @@ public class ListaMensajes extends AppCompatActivity implements NavigationView.O
 
     //Para conectar con la BBDD
     public BDDHelper miHelper = new BDDHelper(this);
+    Bundle datos;
+    int marka = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_mensajes);
 
+        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        //notificationManager.cancelAll();
+        notificationManager.cancel(234);
+        datos = getIntent().getExtras();
+
+        if(datos == null){
+           // Toast.makeText(getApplicationContext(),"Está vacio!",Toast.LENGTH_LONG).show();
+            marka =0;
+        }else{
+            //Toast.makeText(getApplicationContext(),"Está LLeno!",Toast.LENGTH_LONG).show();
+
+            Bundle datos2 = new Bundle();
+            datos2.putInt("id",datos.getInt("id_mensaje"));
+            datos2.putString("titulo",datos.getString("titulo"));
+            datos2.putString("tabla",datos.getString("nombre_tabla"));
+
+
+            android.support.v4.app.Fragment fragment =new FragmentMuestraMensaje2();
+            fragment.setArguments(datos2);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.popBackStack("root_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.replace(R.id.screen_area,fragment).addToBackStack("root_fragment");
+            ft.commit();
+        }
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-      /*  FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -100,72 +125,18 @@ public class ListaMensajes extends AppCompatActivity implements NavigationView.O
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View header=navigationView.getHeaderView(0);
+        LinearLayout sideNavLayout = (LinearLayout)header.findViewById(R.id.sideNavLayout);
+        sideNavLayout.setBackgroundResource(R.drawable.botones);
+
+
+
         navigationView.setNavigationItemSelectedListener(this);
 
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-       /* TextView texto5 = (TextView)findViewById(R.id.texto_tiene_mensajes);
-        texto5.setText("dinga??");*/
-        TextView texto = (TextView)findViewById(R.id.texto_tiene_mensajes);
-        TextView texto2 = (TextView)findViewById(R.id.texto_tiene_mensajes_continuacion);
-        texto.setPadding(20,20,5,5);
-        texto2.setPadding(20,20,5,5);
-        //Para conectar con la BBDD
-        BDDHelper miHelper = new BDDHelper(this);
 
-        //Comprobar si hay mensajes del tipo seleccionado
-
-        SQLiteDatabase db = miHelper.getReadableDatabase();
-        String RAW_QUERY = "SELECT name FROM sqlite_master WHERE type='table' and name not in('tokens','categorias','android_metadata')";
-        Cursor cursor = db.rawQuery(RAW_QUERY, null);
-        cursor.moveToFirst();
-
-        ArrayList<String> nombres_tablas = new ArrayList<>();
-
-        for(int i=0;i<cursor.getCount();i++){
-
-            String RAW_QUERY_2= "SELECT leido FROM '"+cursor.getString(0)+"' ";
-            Cursor cursor2 = db.rawQuery(RAW_QUERY_2,null);
-            cursor2.moveToFirst();
-
-            String nombre_tabla="";
-
-            for(int j=0;j<cursor2.getCount();j++){
-                Log.d("getInt",""+cursor2.getInt(0));
-                if(cursor2.getInt(0)==0){
-                    if(cursor.getString(0).startsWith("curso")){
-                       nombre_tabla = cursor.getString(0).substring(6,cursor.getString(0).length()).replace("_"," ".replace("!",""));
-                    }else if(cursor.getString(0).startsWith("hijo")){
-                        nombre_tabla = cursor.getString(0).substring(5,cursor.getString(0).length()).replace("_"," ").replace("!","");
-                    }else{
-                         nombre_tabla="General";
-                    }
-                    nombres_tablas.add(nombre_tabla);
-                    break;
-                }
-                cursor2.moveToNext();
-            }
-            cursor.moveToNext();
-        }
-
-
-       /* if(nombres_tablas.size()>0){
-
-            texto.setText("\n-----Tiene mensajes sin leer de:----");
-
-
-            String para = "";
-            for(int ii=0;ii<nombres_tablas.size();ii++){
-                para = para +nombres_tablas.get(ii)+".\n\n ";
-            }
-            para=para.substring(0,para.length()-1);
-            para=para.replace("_"," ");
-            para=para.replace("!","");
-            texto2.setText(para);
-
-        }*/
-        db.close();
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -204,6 +175,33 @@ public class ListaMensajes extends AppCompatActivity implements NavigationView.O
           drawer.closeDrawer(GravityCompat.START);
       } else {
           super.onBackPressed();
+
+          /*
+          AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Add the buttons
+
+          builder.setMessage("¿Quiere salir de la aplicación?")
+                  .setTitle("Salir");
+
+          builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int id) {
+                  // User clicked OK button
+
+                  ListaMensajes.super.onBackPressed();
+              }
+          });
+          builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int id) {
+                  // User cancelled the dialog
+              }
+          });
+        // Set other dialog properties
+
+
+        // Create the AlertDialog
+          AlertDialog dialog = builder.create();
+          dialog.show();
+          */
       }
 
   }
@@ -253,6 +251,33 @@ public class ListaMensajes extends AppCompatActivity implements NavigationView.O
             fragment = new GeneralFragment();
         }else if(id==R.id.nav_acerca_de){
             fragment = new AcercaDeFragment();
+        }else if(id==R.id.nav_cerrar){
+            //todo cerrar aplicacion
+            //super.onBackPressed();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            // Add the buttons
+
+            builder.setMessage("¿Quiere cerrar la aplicación? Se le pedirá que vuelva a identificarse la próxima vez que acceda.")
+                    .setTitle("Salir");
+
+            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User clicked OK button
+                    cierraSesion(0);
+                    ListaMensajes.super.onBackPressed();
+                }
+            });
+            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User cancelled the dialog
+                }
+            });
+            // Set other dialog properties
+
+
+            // Create the AlertDialog
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
 
         if(fragment!=null){
@@ -267,6 +292,35 @@ public class ListaMensajes extends AppCompatActivity implements NavigationView.O
 
         return true;
     }
+
+
+    public void cierraSesion(int sesion){
+
+        SharedPrefManager.getInstance(getApplicationContext()).switchSesion(sesion);
+        /*BDDHelper mDbHelper = new BDDHelper(getApplicationContext());
+        //Para poder escribir datos en la BBDD
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+
+
+        //Crear un nuevo mapa de valores, donde los nombres de las columnas son las keys
+        ContentValues values = new ContentValues();
+        //values.put("id",1);
+        values.put("sesion",0);
+
+
+        //Indicar la fila en la que se van a modificar datos
+        String selection = " id LIKE ?";
+        String[] selectionArgs = {"1"};
+        //Ejecutar la consulta
+        int count = db.update(
+                "tokens",
+                values,
+                selection,
+                selectionArgs);*/
+
+    }
+
 
 
 

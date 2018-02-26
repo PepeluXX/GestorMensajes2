@@ -55,7 +55,7 @@ public class TodosLeidosFragment extends Fragment {
 
         for (int i = 0; i < cursor_check.getCount(); i++) {
             String check_tabla = cursor_check.getString(0);
-            String CHECK_QUERY = "SELECT autor FROM '" + check_tabla + "'";
+            String CHECK_QUERY = "SELECT autor FROM '" + check_tabla + "' WHERE leido = 1";
             Cursor cursor_autor = db3.rawQuery(CHECK_QUERY, null);
 
 
@@ -229,12 +229,13 @@ public class TodosLeidosFragment extends Fragment {
                             datos.putInt("id",boton.getId());
                             datos.putString("titulo",titulo);
                             datos.putString("tabla","'"+nombre_tabla+"'");
+                            datos.putString("desde","leidos");
 
 
                             Fragment fragment =new FragmentMuestraMensaje2();
                             fragment.setArguments(datos);
                             FragmentManager fragmentManager = getFragmentManager();
-                            fragmentManager.popBackStack("root_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                            //fragmentManager.popBackStack("root_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                             FragmentTransaction ft = fragmentManager.beginTransaction();
                             ft.replace(R.id.screen_area,fragment).addToBackStack("root_fragment");
                             ft.commit();
@@ -284,28 +285,7 @@ public class TodosLeidosFragment extends Fragment {
                             builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     // User clicked OK button
-                                    //Para escribir o borrar datos en la BBDD
-                                    BDDHelper miOtroHelper = new BDDHelper(getActivity());
-                                    SQLiteDatabase db = miOtroHelper.getWritableDatabase();
-
-                                    //Definir WHERE de la consulta
-                                    String selection = "id LIKE ?";
-                                    //Definir parámetros de la consulta
-                                    String []selectionArgs = {String.valueOf(id)};
-
-                                    //Ejecutar consulta
-                                    db.delete("'"+nombre_tabla+"'",selection,selectionArgs);
-                                    //Cerrar la conexión con la BBDD
-                                    db.close();
-
-                                    Fragment fragment = null;
-                                    fragment= new TodosLeidosFragment();
-                                    Log.d("desde","hola estamo en todos leidos");
-                                    FragmentManager fragmentManager = getFragmentManager();
-                                    fragmentManager.popBackStack("root_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                                    FragmentTransaction ft = fragmentManager.beginTransaction();
-                                    ft.replace(R.id.screen_area,fragment).addToBackStack("root_fragment");
-                                    ft.commit();
+                                    borraMensaje(nombre_tabla,boton_borrar.getId());
 
                                 }
                             });
@@ -354,6 +334,7 @@ public class TodosLeidosFragment extends Fragment {
                     cursor2.moveToNext();
                 }//END FOR MENSAJE
                 cursor.moveToNext();
+
             }//END FOR TABLA
 
 
@@ -394,6 +375,32 @@ public class TodosLeidosFragment extends Fragment {
     }
 
 
+    public void borraMensaje(String nombre_tabla,int id){
+
+
+        //Para escribir o borrar datos en la BBDD
+        BDDHelper miOtroHelper = new BDDHelper(getActivity());
+        SQLiteDatabase db = miOtroHelper.getWritableDatabase();
+
+        //Definir WHERE de la consulta
+        String selection = "id LIKE ?";
+        //Definir parámetros de la consulta
+        String []selectionArgs = {String.valueOf(id)};
+
+        //Ejecutar consulta
+        db.delete("'"+nombre_tabla+"'",selection,selectionArgs);
+        //Cerrar la conexión con la BBDD
+        db.close();
+
+        Fragment fragment = null;
+        fragment= new TodosLeidosFragment();
+        Log.d("desde","hola estamo en todos leidos");
+        FragmentManager fragmentManager = getFragmentManager();
+        //fragmentManager.popBackStack("root_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.screen_area,fragment).addToBackStack("root_fragment");
+        ft.commit();
+    }
 
 
 

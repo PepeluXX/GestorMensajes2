@@ -1,6 +1,7 @@
 package com.example.lourdes.gestormensajes;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -12,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -199,12 +201,13 @@ public class PorHijosFragment extends Fragment {
                                     datos.putInt("id",boton.getId());
                                     datos.putString("titulo",titulo);
                                     datos.putString("tabla","'"+nombre_tabla+"'");
+                                    datos.putString("desde","hijos");
 
 
                                     android.support.v4.app.Fragment fragment =new FragmentMuestraMensaje2();
                                     fragment.setArguments(datos);
                                     FragmentManager fragmentManager = getFragmentManager();
-                                    fragmentManager.popBackStack("root_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                   // fragmentManager.popBackStack("root_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                                     FragmentTransaction ft = fragmentManager.beginTransaction();
                                     ft.replace(R.id.screen_area,fragment).addToBackStack("root_fragment");
                                     ft.commit();
@@ -218,20 +221,30 @@ public class PorHijosFragment extends Fragment {
                             boton_borrar.setOnClickListener(new View.OnClickListener() {
                                 public void onClick(View v) {
 
-                                    String titulo = boton.getText().toString();
-                                    titulo = titulo.substring(0, titulo.indexOf("\n"));
-                                    //Crear intento para iniciar una nueva actividad
-                                    Intent intent = new Intent(getActivity(), ConfirmarBorradoMensaje.class);
-                                    //Añadir datos al intento para que los use la actividad que se va a iniciar
-                                    intent.putExtra("titulo", titulo);
-                                    intent.putExtra("nombre_tabla", "'" + nombre_tabla + "'");
-                                    intent.putExtra("id_mensaje", boton_borrar.getId());
-                                    intent.putExtra("fragmento", "hijos");
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                    // Add the buttons
 
-                                    //Comenzamos la nueva actividad
-                                    startActivity(intent);
-                                    //Finalizamos la actividad actual
-                                    //getActivity().finish();
+                                    builder.setMessage("¿Seguro que quiere borrar este mensaje?")
+                                            .setTitle("Borrar");
+
+                                    builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            // User clicked OK button
+                                            borraMensaje(nombre_tabla,boton_borrar.getId());
+
+                                        }
+                                    });
+                                    builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            // User cancelled the dialog
+                                        }
+                                    });
+                                    // Set other dialog properties
+
+
+                                    // Create the AlertDialog
+                                    AlertDialog dialog = builder.create();
+                                    dialog.show();
 
                                 }
                             });
@@ -302,5 +315,34 @@ public class PorHijosFragment extends Fragment {
         int pxx = Math.round(px);
         return pxx;
     }
+
+
+    public void borraMensaje(String nombre_tabla,int id){
+
+
+        //Para escribir o borrar datos en la BBDD
+        BDDHelper miOtroHelper = new BDDHelper(getActivity());
+        SQLiteDatabase db = miOtroHelper.getWritableDatabase();
+
+        //Definir WHERE de la consulta
+        String selection = "id LIKE ?";
+        //Definir parámetros de la consulta
+        String []selectionArgs = {String.valueOf(id)};
+
+        //Ejecutar consulta
+        db.delete("'"+nombre_tabla+"'",selection,selectionArgs);
+        //Cerrar la conexión con la BBDD
+        db.close();
+
+        android.support.v4.app.Fragment fragment = null;
+        fragment= new PorHijosFragment();
+        Log.d("desde","hola estamo en fragment por hijos");
+        FragmentManager fragmentManager = getFragmentManager();
+        //fragmentManager.popBackStack("root_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.screen_area,fragment).addToBackStack("root_fragment");
+        ft.commit();
+    }
+
 
 }//end of class

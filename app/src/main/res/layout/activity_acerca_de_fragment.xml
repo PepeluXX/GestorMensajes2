@@ -23,7 +23,7 @@
             android:paddingLeft="20dp"
             android:paddingTop="40dp"
             android:text="@string/nota_main"
-            android:textSize="15sp" />
+            android:textSize="17sp" />
 
         <ImageView
             android:id="@+id/imageView2"
@@ -40,7 +40,16 @@
             android:paddingLeft="20dp"
             android:paddingTop="20dp"
             android:text="Contacto: jluisfpp@gmail.com"
-            android:textSize="15sp"/>
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/text2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:paddingTop="20dp"
+            android:text="@string/link_portal"
+            android:textSize="20sp"/>
 
 
     </LinearLayout>

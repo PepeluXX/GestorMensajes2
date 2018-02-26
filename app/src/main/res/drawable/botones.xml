@@ -10,7 +10,7 @@
 
     <item android:state_enabled="false">
         <shape>
-            <solid android:color="#303f8f"></solid>
+            <solid android:color="#7b8ef6"></solid>
             <corners android:radius="@dimen/radio_boton"></corners>
         </shape>
     </item>
@@ -18,8 +18,8 @@
         <shape>
 
             <gradient
-                android:startColor="#dddfdf"
-                android:endColor="#2c26da"
+                android:startColor="#96a4ef"
+                android:endColor="#7b8ef6"
                 android:angle="270">
             </gradient>
             <corners android:radius="@dimen/radio_boton"></corners>

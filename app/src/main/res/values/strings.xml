@@ -1,5 +1,5 @@
-<resources>
-    <string name="app_name">ActivacionBeta</string>
+<resources xmlns:https="http://schemas.android.com/tools">
+    <string name="app_name">Gestor de Avisos y Mensajes</string>
     <string name="texto_bienvenida">Bienvenido a la aplicación para la gestión de Avisos y Mensajes. Introduzca sus datos
     para continuar.</string>
     <string name="instrucciones_categorias">
@@ -16,7 +16,8 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nota_main">Trabajo Fin de Grado.\nUniversidad de Jaén. Grado en Telemática.\nDesarrollado por: Jose Luis Fernández-Piñar Padial.
+    <string name="nota_main">Trabajo Fin de Grado.\nGrado en Ingeniería Telemática.\nDesarrollado por:\nJose Luis Fernández-Piñar Padial.
                             \nTutor: Juan Carlos Cuevas Martinez.</string>
     <string name="action_settings">Settings</string>
+    <string name="link_portal"><a href= "https://www.portaldedesarrollo.com">https://www.portaldedesarrollo.com</a></string>
 </resources>

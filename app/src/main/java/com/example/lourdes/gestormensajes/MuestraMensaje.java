@@ -46,7 +46,7 @@ public class MuestraMensaje extends AppCompatActivity {
     int id;
     //Para recoger los datos que vienen en el intento desde la actividad que inició esta actividad
     Bundle datos;
-   // String marca="";
+    // String marca="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +61,7 @@ public class MuestraMensaje extends AppCompatActivity {
         //Recoger datos del intento
         datos = getIntent().getExtras();
 
+        /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setImageResource(R.mipmap.leer_nota);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -78,7 +79,7 @@ public class MuestraMensaje extends AppCompatActivity {
                 //Toast.makeText(getApplicationContext(),""+nota,Toast.LENGTH_SHORT).show();
 
 
-               if(nota == null){
+                if(nota == null){
                     Snackbar.make(view, "No hay notas sobre este mensaje.", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
 
@@ -90,7 +91,7 @@ public class MuestraMensaje extends AppCompatActivity {
             }
         });
 
-
+       */
 
 
 
@@ -102,10 +103,10 @@ public class MuestraMensaje extends AppCompatActivity {
         texto_titulo = (TextView)findViewById(R.id.texto_titulo);
         texto_mensaje = (TextView)findViewById(R.id.texto_mensaje);
 
-       boton_borrar_mensaje = (ImageButton)findViewById(R.id.boton_borrar_mensaje);
-       boton_guardar_mensaje = (ImageButton)findViewById(R.id.boton_guardar_mensaje);
-       boton_crear_categoria = (ImageButton)findViewById(R.id.boton_crear_categoria);
-       boton_crear_nota = (ImageButton)findViewById(R.id.boton_crear_nota);
+        boton_borrar_mensaje = (ImageButton)findViewById(R.id.boton_borrar_mensaje);
+        boton_guardar_mensaje = (ImageButton)findViewById(R.id.boton_guardar_mensaje);
+        boton_crear_categoria = (ImageButton)findViewById(R.id.boton_crear_categoria);
+        boton_crear_nota = (ImageButton)findViewById(R.id.boton_crear_nota);
 
 
 
@@ -159,7 +160,7 @@ public class MuestraMensaje extends AppCompatActivity {
 
         //Poner el botón de borrar a la escucha de ser pulsado
 
-       boton_borrar_mensaje.setOnClickListener(new View.OnClickListener() {
+        boton_borrar_mensaje.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Definir intento para iniciar una nueva actividad
@@ -224,7 +225,7 @@ public class MuestraMensaje extends AppCompatActivity {
     }
 
     //Definira acciones a realizar cuando se pulse el botón 'Atrás' en el dispositivo
-   @Override
+    @Override
     public void onBackPressed() {
 
         Intent intent = new Intent(getApplicationContext(),ParaFragmentos.class);
@@ -240,7 +241,7 @@ public class MuestraMensaje extends AppCompatActivity {
         else {//sabemos que está el dato con clave "fragmento" por lo tanto no habrá error al recogerlo
             intent.putExtra("fragmento",datos.getString("fragmento"));
         }
-       intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
 

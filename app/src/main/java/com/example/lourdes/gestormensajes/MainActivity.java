@@ -27,6 +27,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //URL a la que conectar para enviar los datos
     private static final String URL_REGISTRO_TOKEN= "https://www.portaldedesarrollo.com/TokenRegistration.php";
+
 
     //Cadena de texto para almacenar el mensaje respuesta del servidor
     String respuesta_servidor;
@@ -79,15 +81,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // y se pasa a la actividad que contiene el menú principal para la gestión de mensajes.
         //El token se guarda en la base de datos únicamente si el registro en el portal web ha sido exitoso.
 
+
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         //GET token
         String[] projection = {
-                EstructuraBDD.COLUMNA_TOKEN
+                EstructuraBDD.COLUMNA_TOKEN,
+                EstructuraBDD.COLUMNA_SESION,
+                EstructuraBDD.COLUMNA_REGISTRADO
         };
 
         //WHERE id = 1
-        String selection = EstructuraBDD.COLUMNA_ID + " = ?";
+        String selection = EstructuraBDD.COLUMNA_ID + " = ? ";
         String[] selectionArgs = {"1"};
 
         try{
@@ -103,10 +108,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             cursor.moveToFirst();
 
+            int registrado = SharedPrefManager.getInstance(this).getRegistrado();
+            //sólo será 2 cuando se inicie la aplicación por primera vez
+            if(registrado == 2){
+                registrado = SharedPrefManager.getInstance(this).creaVariableRegistrado();
+            }
 
+            int sesion = SharedPrefManager.getInstance(this).getSesion();
+
+            //sólo será 2 cuando se inicie la aplicación por primera vez
+            if(sesion == 2){
+                sesion = 0;
+            }
             //¿El token está guardado en la base de datos? esto implica que el registro en el portal (desde la aplicación) se produjo con éxito
+            //¿sesión activa? ¿está registrado en el portal?
 
-            if(cursor.getString(0)!=null){
+            if(cursor.getString(0)!=null && sesion==1 && registrado ==1){ //todo comprobar también si se cerró sesión o no
 
                 //si el registro ya se produjo, pasamos al menú principal de gestión de mensajes
 
@@ -158,14 +175,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final String password = editTextPassword.getText().toString().trim();
 
         //se comprueba que el usuario ha rellenado los campos. Se obliga a que rellene ambos campos para seguir.
-        if(TextUtils.isEmpty(dni) || TextUtils.isEmpty(password)){
+        if(TextUtils.isEmpty(dni) || TextUtils.isEmpty(password)){//todo comprobar si es un inicio completamente nuevo o ya se crearon las tablas
 
             Toast.makeText(this,"Por favor rellene los campos necesarios", Toast.LENGTH_LONG).show();
         }
         //Si se han insertado valores para usuario y password, se crea petición POST para enviar al servidor
         else{
+                //TODO comprobar que no es el primer registro, recoger "registrado" de la BBDD
 
-            if(SharedPrefManager.getInstance(this).getToken() != null){
+            //int registrado = compruebaRegistrado();
+            //int sesion = compruebaSesion();
+
+            //la primera vez que se inicie la aplicación, como la variable sesión no estará creada, devolverá 2
+
+            int registrado = SharedPrefManager.getInstance(this).getRegistrado();
+            //sólo será 2 cuando se inicie la aplicación por primera vez
+            if(registrado == 2){
+                registrado = SharedPrefManager.getInstance(this).creaVariableRegistrado();
+            }
+            int sesion = SharedPrefManager.getInstance(this).getSesion();
+
+            //sólo será 2 cuando se inicie la aplicación por primera vez
+            if(sesion == 2){
+                sesion = SharedPrefManager.getInstance(this).creaVariableSesion();
+            }
+
+            if(SharedPrefManager.getInstance(this).getToken() != null && registrado ==0){
 
                 //Configurar la petición POST que vamos a enviarle al servidor. Se crea un objeto de la clase StringRequest al que se
                 //le pasa para crearlo el método de la petición, la URL, un método que describe las acciones a realizar cuando se obtiene una
@@ -209,7 +244,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                         values.put(EstructuraBDD.COLUMNA_ID, "1");
                                         values.put(EstructuraBDD.COLUMNA_TOKEN, SharedPrefManager.getInstance(getApplicationContext()).getToken()); // o guadar otra cosa, lo importante es que ya se registró bien en el portal
-
+                                        values.put(EstructuraBDD.COLUMNA_SESION,"1");
+                                        values.put(EstructuraBDD.COLUMNA_REGISTRADO,"1");
                                         // Se inserta la nueva fila y se devuelve el valor de la clave primaria (id) de la nueva fila insertada,
                                         // en caso de error devolverá -1
 
@@ -262,7 +298,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                             while(!nombres_hijos.equals("")){
 
-                                                Toast.makeText(getApplicationContext(),"dentro del while",Toast.LENGTH_LONG).show();
+                                                //Toast.makeText(getApplicationContext(),"dentro del while",Toast.LENGTH_LONG).show();
 
                                                 // true si sólo un hijo
 
@@ -428,6 +464,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                             db.close();
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                            //todo poner registrado == 1 en tabla
+                                            //activaRegistro();
+                                            SharedPrefManager.getInstance(getApplicationContext()).switchRegistrado(1);
 
                                             //Se crea un intento para abandonar esta activity y pasar a activity MenuPrincipal
                                             Intent intent = new Intent(getApplicationContext(), ListaMensajes.class);
@@ -477,6 +516,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         params.put("dni",dni);
                         //Añadir password
                         params.put("password",password);
+                        //indicar si es primera vez o posteriores, para que se envíe o no el mensaje de bienvenida desde el servidor
+                        params.put("primera","si");
 
                         return params;
                     }
@@ -488,7 +529,104 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 requestQueue.add(stringRequest);
 
-            }
+            }//todo si ya está registrado pero cerró sesión
+            else if(SharedPrefManager.getInstance(this).getToken() != null && registrado ==1 && sesion == 0){
+                //todo comprobar usuario y password, si true--> iniciar lista mensajes y decir bienvenido de nuevo
+                StringRequest stringRequest = new StringRequest(
+
+                        //el método de la petición
+                        Request.Method.POST,
+
+                        //La URL del servidor
+                        URL_REGISTRO_TOKEN,
+
+                        //Acciones a realizar si se obtiene una respuesta del servidor
+                        new Response.Listener<String>() {
+
+                            @Override
+                            public void onResponse(String response) {
+
+                                try{
+
+                                    //Almacena toda la respuesta del servidor a la petición
+                                    JSONObject obj = new JSONObject(response);
+
+                                    //En 'message' se encuentra el código que indica el resultado de la petición
+                                    respuesta_servidor = obj.getString("message");
+                                    Toast.makeText(getApplicationContext(),"Respuesta servidor = "+respuesta_servidor,Toast.LENGTH_LONG).show();
+                                    //Si el token y los datos de usuario se han registrado correctamente en el portal
+
+                                    if(respuesta_servidor.equals("OK")) {
+
+                                        Toast.makeText(getApplicationContext(),"Bienvenido/a de nuevo.",Toast.LENGTH_LONG).show();
+                                        //todo poner sesion == 1 en tabla
+
+                                      // int count = activaSesion();
+                                        SharedPrefManager.getInstance(getApplicationContext()).switchSesion(1);
+
+
+                                            //Se crea un intento para abandonar esta activity y pasar a activity MenuPrincipal
+                                            Intent intent = new Intent(getApplicationContext(), ListaMensajes.class);
+                                            //Comenzar nueva actividad MenuPrincipal
+                                            startActivity(intent);
+                                            //Finalizar activity actual
+                                            finish();
+
+
+
+
+
+                                    }//end if
+                                    //Si el servidor devuelve un error en el registro de los datos
+                                    else{
+                                        Toast.makeText(getApplicationContext(),"La autenticación en el portal web ha fallado.",Toast.LENGTH_LONG).show();
+                                    }
+
+                                }catch(JSONException e){
+
+                                    e.printStackTrace();
+                                }
+                            }
+                        },
+                        //Si no se ha podido conectar con el servidor
+
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(getApplicationContext(),"No se ha podido conectar con el servidor. Respuesta = "+error.getMessage(),Toast.LENGTH_LONG).show();
+                            }
+                        }
+                ){
+
+                    //Configurar los parámetros de la petición POST:
+
+                    //Sobreescribir método getParams() de la clase StrinRequest
+                    @Override
+                    protected Map<String,String> getParams() throws AuthFailureError {
+                        //Crear mapa de valores
+                        Map<String,String> params = new HashMap<>();
+                        //Añadir token
+                        params.put("token",SharedPrefManager.getInstance(getApplicationContext()).getToken());
+                        //Añadir dni
+                        params.put("dni",dni);
+                        //Añadir password
+                        params.put("password",password);
+                        //indicar si es primera vez o posteriores, para que se envíe o no el mensaje de bienvenida desde el servidor
+                        params.put("primera","no");
+
+                        return params;
+                    }
+                };
+
+                //Una vez configurada la petición, la añadimos a la queue
+
+                RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+                requestQueue.add(stringRequest);
+
+
+            }//end elseif (SharedPrefManager.getInstance(this).getToken() != null && registrado ==1 && sesion == 0)
+
             //Si la asignación de token en los servidores FCM de Google ha fallado
             else{
                 Toast.makeText(this,"El Token no se ha generado.",Toast.LENGTH_LONG).show();
@@ -497,5 +635,138 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }//end of registraToken()
 
+
+    public int compruebaRegistrado(){
+
+        BDDHelper mDbHelper = new BDDHelper(this);
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        int registrado=0;
+        //GET token
+        String[] projection = {
+
+                EstructuraBDD.COLUMNA_REGISTRADO
+        };
+
+        //WHERE id = 1
+        String selection = EstructuraBDD.COLUMNA_ID + " = ? ";
+        String[] selectionArgs = {"1"};
+
+        try{
+            Cursor cursor = db.query(
+                    EstructuraBDD.TABLE_NAME,                     // The table to query
+                    projection,                               // The columns to return
+                    selection,                                // The columns for the WHERE clause
+                    selectionArgs,                            // The values for the WHERE clause
+                    null,                                     // don't group the rows
+                    null,                                     // don't filter by row groups
+                    null                                 // The sort order
+            );
+
+            cursor.moveToFirst();
+
+            registrado = cursor.getInt(0);
+
+        }catch(Exception e){
+            Toast.makeText(this,e.getMessage()/*"fallo en método compruebaRegistrado()"*/, Toast.LENGTH_LONG).show();
+        }
+
+        return registrado;
+
+    }
+
+    public int compruebaSesion(){
+
+        BDDHelper mDbHelper = new BDDHelper(this);
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        int sesion=0;
+        //GET token
+        String[] projection = {
+
+                EstructuraBDD.COLUMNA_SESION
+        };
+
+        //WHERE id = 1
+        String selection = EstructuraBDD.COLUMNA_ID + " = ? ";
+        String[] selectionArgs = {"1"};
+
+        try{
+            Cursor cursor = db.query(
+                    EstructuraBDD.TABLE_NAME,                     // The table to query
+                    projection,                               // The columns to return
+                    selection,                                // The columns for the WHERE clause
+                    selectionArgs,                            // The values for the WHERE clause
+                    null,                                     // don't group the rows
+                    null,                                     // don't filter by row groups
+                    null                                 // The sort order
+            );
+
+            cursor.moveToFirst();
+
+            sesion = cursor.getInt(0);
+
+        }catch(Exception e){
+            Toast.makeText(this,"fallo en método compruebaRegistrado()", Toast.LENGTH_LONG).show();
+        }
+
+        return sesion;
+
+    }
+
+
+    public int activaSesion(){
+
+        BDDHelper mDbHelper = new BDDHelper(getApplicationContext());
+        //Para poder escribir datos en la BBDD
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+
+
+        //Crear un nuevo mapa de valores, donde los nombres de las columnas son las keys
+        ContentValues values = new ContentValues();
+        //values.put("id",1);
+        values.put("sesion",1);
+
+
+        //Indicar la fila en la que se van a modificar datos
+        String selection = " id LIKE ?";
+        String[] selectionArgs = {"1"};
+        //Ejecutar la consulta
+        int count = db.update(
+                "tokens",
+                values,
+                selection,
+                selectionArgs);
+
+
+        return count;
+    }
+
+
+    public void activaRegistro(){
+
+        BDDHelper mDbHelper = new BDDHelper(getApplicationContext());
+        //Para poder escribir datos en la BBDD
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+
+
+        //Crear un nuevo mapa de valores, donde los nombres de las columnas son las keys
+        ContentValues values = new ContentValues();
+        //values.put("id",1);
+        values.put("registrado",1);
+
+
+        //Indicar la fila en la que se van a modificar datos
+        String selection = " id LIKE ?";
+        String[] selectionArgs = {"1"};
+        //Ejecutar la consulta
+        int count = db.update(
+                "tokens",
+                values,
+                selection,
+                selectionArgs);
+    }
 
 }//end of class

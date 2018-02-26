@@ -85,7 +85,7 @@ public class ServicioFirebaseMessaging extends FirebaseMessagingService {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         //Para comprobar si la tabla ya existe
-        compruebaCurso(destinatario);
+        compruebaDestinatario(destinatario);
 
         //Crear un nuevo mapa de valores, donde los nombres de las columnas son las keys
         ContentValues values = new ContentValues();
@@ -153,15 +153,33 @@ public class ServicioFirebaseMessaging extends FirebaseMessagingService {
         //a su vez la actividad que se iniciará cuando se pulse sobre la notificación
 
 
-        Intent intent = new Intent(getApplicationContext(),MuestraMensaje.class);
+        //LO QUE VOY A HACER ENTONCES ES DESDE AQUÍ LLAMAR A LISTAMENSAJES, EN LISTAMENSAJES CONTROLAR
+        //SI VENGO DESDE AQUÍ, SI TRUE, PASAR AL FRAGMENT MUESTRA MENSAJE.
 
+        //Intent intent = new Intent(getApplicationContext(),MuestraMensaje.class);
 
+        Intent intent;
+        int sesion = SharedPrefManager.getInstance(getApplicationContext()).getSesion();
 
-        //Añadir valores en el intento
-        intent.putExtra("nombre_tabla",destinatario);
-        intent.putExtra("titulo",titulo);
-        intent.putExtra("id_mensaje",id_mensaje);
-        intent.putExtra("desde_notificacion",true);
+        if(sesion == 1 ) {
+
+             intent = new Intent(getApplicationContext(), ListaMensajes.class);
+
+            //Añadir valores en el intento
+            intent.putExtra("nombre_tabla",destinatario);
+            intent.putExtra("titulo",titulo);
+            intent.putExtra("id_mensaje",id_mensaje);
+            intent.putExtra("desde_notificacion",true);
+
+            //dingueando
+            intent.putExtra("fragmento","muestra_mensaje");
+            // fin dingueando
+        }
+        else{
+
+             intent = new Intent(getApplicationContext(),MainActivity.class);
+        }
+
 
 
 
@@ -179,7 +197,7 @@ public class ServicioFirebaseMessaging extends FirebaseMessagingService {
    *
    * */
 
-    public boolean compruebaCurso(String destinatario){
+    public boolean compruebaDestinatario(String destinatario){
 
         //Para conectar con la BBDD
         final BDDHelper mDbHelper = new BDDHelper(getApplicationContext());

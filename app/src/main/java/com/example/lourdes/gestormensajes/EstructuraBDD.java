@@ -21,12 +21,16 @@ public class EstructuraBDD {
     //Nombre de las columnas de las tablas
     public static final String COLUMNA_ID = "id";
     public static final String COLUMNA_TOKEN = "token";
+    public static final String COLUMNA_SESION = "sesion";
+    public static final String COLUMNA_REGISTRADO = "registrado";
 
     //Crear consulta de creación de tabla
     public static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + EstructuraBDD.TABLE_NAME + " (" +
                     EstructuraBDD.COLUMNA_ID + " INTEGER PRIMARY KEY," +
-                    EstructuraBDD.COLUMNA_TOKEN + " TEXT)";
+                    EstructuraBDD.COLUMNA_TOKEN + " TEXT," +
+                    EstructuraBDD.COLUMNA_SESION+" INTEGER," +
+                    EstructuraBDD.COLUMNA_REGISTRADO+" INTEGER)";
 
     public static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + TABLE_NAME;

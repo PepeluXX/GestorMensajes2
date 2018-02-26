@@ -10,6 +10,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.LinearLayout;
 
 public class ParaFragmentos extends ListaMensajes {
 
@@ -30,6 +32,10 @@ public class ParaFragmentos extends ListaMensajes {
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View header=navigationView.getHeaderView(0);
+        LinearLayout sideNavLayout = (LinearLayout)header.findViewById(R.id.sideNavLayout);
+        sideNavLayout.setBackgroundResource(R.drawable.botones);
+
         navigationView.setNavigationItemSelectedListener(this);
 
 
@@ -62,6 +68,16 @@ public class ParaFragmentos extends ListaMensajes {
         else if(fragmento.equals("gen")){
             fragment = new GeneralFragment();
         }
+        //dingueando
+        else if(fragmento.equals("muestra_mensaje")){
+            fragment = new FragmentMuestraMensaje2();
+            Bundle datos2 = new Bundle();
+            datos2.putInt("id",datos.getInt("id_mensaje"));
+            datos2.putString("titulo",datos.getString("titulo"));
+            datos2.putString("tabla",datos.getString("nombre_tabla"));
+            fragment.setArguments(datos2);
+        }
+        // fin dingueando
 
         if(fragment!=null) {
             FragmentManager fragmentManager = getSupportFragmentManager();

@@ -2,6 +2,7 @@ package com.example.lourdes.gestormensajes;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -12,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -37,7 +39,11 @@ public class CategorizadosFragment extends android.support.v4.app.Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final String categoria = getArguments().getString("categoria");
+
+
+
+                final String categoria = getArguments().getString("categoria");
+
         //Toast.makeText(getActivity(),"categoria = "+categoria,Toast.LENGTH_LONG).show();
         //Para conectar con la BBDD
         BDDHelper miHelper = new BDDHelper(getActivity());
@@ -188,6 +194,8 @@ public class CategorizadosFragment extends android.support.v4.app.Fragment {
                             datos.putInt("id",boton.getId());
                             datos.putString("titulo",titulo);
                             datos.putString("tabla","'"+nombre_tabla+"'");
+                            datos.putString("desde","categorizados");
+                            datos.putString("categoria",categoria);
 
 
                             android.support.v4.app.Fragment fragment =new FragmentMuestraMensaje2();
@@ -209,18 +217,30 @@ public class CategorizadosFragment extends android.support.v4.app.Fragment {
 
                             String titulo = boton.getText().toString();
                             titulo = titulo.substring(0, titulo.indexOf("\n"));
-                            //Crear intento para iniciar una nueva actividad
-                            Intent intent = new Intent(getActivity(), ConfirmarBorradoMensaje.class);
-                            //Añadir datos al intento para que los use la actividad que se va a iniciar
-                            intent.putExtra("titulo", titulo);
-                            intent.putExtra("nombre_tabla", "'" + nombre_tabla + "'");
-                            intent.putExtra("id_mensaje", boton_borrar.getId());
-                            intent.putExtra("fragmento", "categ");
-                            intent.putExtra("categoria",categoria);
-                            //Comenzamos la nueva actividad
-                            startActivity(intent);
-                            //Finalizamos la actividad actual
-                            getActivity().finish();
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            // Add the buttons
+
+                            builder.setMessage("¿Seguro que quiere borrar este mensaje?")
+                                    .setTitle("Borrar");
+
+                            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // User clicked OK button
+                                    borraMensaje(nombre_tabla,boton_borrar.getId(),getArguments().getString("categoria"));
+
+                                }
+                            });
+                            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // User cancelled the dialog
+                                }
+                            });
+                            // Set other dialog properties
+
+
+                            // Create the AlertDialog
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
 
                         }
                     });
@@ -247,7 +267,7 @@ public class CategorizadosFragment extends android.support.v4.app.Fragment {
 
         }else{
             TextView no_mensajes = (TextView)getActivity().findViewById(R.id.texto_no_mensajes);
-            no_mensajes.setText("No tiene mensajes en la categoria "+categoria);
+            no_mensajes.setText("No tiene mensajes en la categoria "+getArguments().getString("categoria"));
             no_mensajes.setTextSize(20);
             no_mensajes.setPadding(20,20,0,0);
         }
@@ -286,5 +306,46 @@ public class CategorizadosFragment extends android.support.v4.app.Fragment {
         int pxx = Math.round(px);
         return pxx;
     }
+
+    public void borraMensaje(String nombre_tabla,int id,String categoria){
+
+
+        //Para escribir o borrar datos en la BBDD
+        BDDHelper miOtroHelper = new BDDHelper(getActivity());
+        SQLiteDatabase db = miOtroHelper.getWritableDatabase();
+
+        //Definir WHERE de la consulta
+        String selection = "id LIKE ?";
+        //Definir parámetros de la consulta
+        String []selectionArgs = {String.valueOf(id)};
+
+        //Ejecutar consulta
+        db.delete("'"+nombre_tabla+"'",selection,selectionArgs);
+        //Cerrar la conexión con la BBDD
+        db.close();
+
+
+        android.support.v4.app.Fragment fragment = null;
+        fragment= new CategorizadosFragment();
+
+
+        Bundle datos2 = new Bundle();
+        datos2.putString("categoria",categoria);
+        fragment.setArguments(datos2);
+
+
+        Log.d("desde","hola estamo en fragment categorizados");
+        FragmentManager fragmentManager = getFragmentManager();
+        //fragmentManager.popBackStack("root_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.screen_area,fragment).addToBackStack("root_fragment");
+        ft.commit();
+
+    }
+
+
+
+
+
 
 }//end of class
