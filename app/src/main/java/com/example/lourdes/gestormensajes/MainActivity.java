@@ -621,7 +621,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
                         }
                 ){
-
                     //Configurar los parámetros de la petición POST:
 
                     //Sobreescribir método getParams() de la clase StrinRequest
