@@ -26,15 +26,20 @@
         android:src="@drawable/ic_guardar_bar_drawable"
         android:background="@color/colorPrimary"
         android:layout_gravity="center"
+        />
 
-
-
+    <ImageButton
+        android:id="@+id/boton_descategorizar_mensaje"
+        style="@style/botones"
+        android:src="@drawable/ic_descategorizar_bar_drawable"
+        android:background="@color/colorPrimary"
+        android:layout_gravity="center"
         />
 
     <ImageButton
         android:id="@+id/boton_crear_categoria"
         style="@style/botones"
-        android:src="@drawable/ic_crear_categoria_bar_drawable"
+        android:src="@drawable/ic_crear_eliminar_cat_bar_drawable"
         android:background="@color/colorPrimary"
         android:layout_gravity="center"
 

@@ -44,7 +44,7 @@ public class BorrarCategoriasFragment extends Fragment {
 
 
         //Layout principal de la actividad
-        final LinearLayout lm = (LinearLayout) getActivity().findViewById(R.id.linearLayout);
+        final LinearLayout lm = (LinearLayout) view.findViewById(R.id.linearLayout);
 
         //Parámetros del layout para definir la apariencia de los botones
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -64,7 +64,7 @@ public class BorrarCategoriasFragment extends Fragment {
 
         //Si aún no existen categorías creadas se muestra un TextView indicándolo
         if(cursor.getCount()==0){
-            no_categorias = (TextView)getActivity().findViewById(R.id.texto_no_cat);
+            no_categorias = (TextView)view.findViewById(R.id.texto_no_cat);
             no_categorias.setText(R.string.no_categorias);
         }
 
@@ -240,7 +240,7 @@ public class BorrarCategoriasFragment extends Fragment {
 
         if (fragment != null) {
             FragmentManager fragmentManager = getFragmentManager();
-            //fragmentManager.popBackStack("root_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            fragmentManager.popBackStack("root_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
             FragmentTransaction ft = fragmentManager.beginTransaction();
             ft.replace(R.id.screen_area, fragment).addToBackStack("root_fragment");
             ft.commit();

@@ -325,8 +325,9 @@ public class CategorizadosFragment extends android.support.v4.app.Fragment {
         db.close();
 
 
-        android.support.v4.app.Fragment fragment = null;
-        fragment= new CategorizadosFragment();
+        //android.support.v4.app.Fragment fragment = null;
+        CategorizadosFragment fragment= null;
+        fragment = new CategorizadosFragment();
 
 
         Bundle datos2 = new Bundle();

@@ -39,7 +39,7 @@ public class FragmentMuestraMensaje2 extends Fragment {
         //Campos de texto para presentar datos sobre el mensaje
         TextView texto_autor, texto_fecha, texto_titulo, texto_mensaje;
         //Botones con imagen que representan las opciones a ejecutar sobre un mensaje
-        ImageButton boton_borrar_mensaje, boton_guardar_mensaje, boton_crear_categoria, boton_crear_nota;
+        ImageButton boton_borrar_mensaje, boton_guardar_mensaje,boton_descategorizar, boton_crear_categoria, boton_crear_nota;
 
         final int id = getArguments().getInt("id");
         final String titulo = getArguments().getString("titulo");
@@ -85,6 +85,7 @@ public class FragmentMuestraMensaje2 extends Fragment {
 
         boton_borrar_mensaje = (ImageButton) view.findViewById(R.id.boton_borrar_mensaje);
         boton_guardar_mensaje = (ImageButton) view.findViewById(R.id.boton_guardar_mensaje);
+        boton_descategorizar = (ImageButton)view.findViewById(R.id.boton_descategorizar_mensaje);
         boton_crear_categoria = (ImageButton) view.findViewById(R.id.boton_crear_categoria);
         boton_crear_nota = (ImageButton) view.findViewById(R.id.boton_crear_nota);
 
@@ -229,6 +230,55 @@ public class FragmentMuestraMensaje2 extends Fragment {
             }
         });
 
+        boton_descategorizar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                // Add the buttons
+
+                final String categoria = compruebaCategoria(getArguments().getString("tabla"),getArguments().getInt("id"));
+                if(categoria != null){
+                    builder.setMessage("¿Desvincular mensaje de la categoría "+categoria+"?")
+                            .setTitle("Descategorizar");
+                }else{
+                    builder.setMessage("El mensaje no está vinculado a ninguna categoría.")
+                            .setTitle("Descategorizar");
+                }
+
+                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+
+                        if(categoria != null) {
+                            descategorizaMensaje(getArguments().getString("tabla"),getArguments().getInt("id"));
+                        }else{
+                            int i = 1;
+                        }
+                    }
+                });
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+                // Set other dialog properties
+
+
+                // Create the AlertDialog
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+
+            }
+        });
+
+
+
+
+
+
         //Poner el botón a la escucha de ser pulsado. Si se pulsa se accede a la actividad "CrearCategorias"
         boton_crear_categoria.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -257,11 +307,27 @@ public class FragmentMuestraMensaje2 extends Fragment {
             @Override
             public void onClick(View view) {
 
+                /*
                 Intent intent2 = new Intent(getActivity(), CrearNota.class);
                 //Insertar datos en el intento
                 intent2.putExtra("nombre_tabla", tabla);
                 intent2.putExtra("id", String.valueOf(id));
                 startActivity(intent2);
+                */
+                Fragment fragment = new CrearNotaFragment();
+                Bundle datos = new Bundle();
+                datos.putInt("id",getArguments().getInt("id"));
+                datos.putString("tabla",getArguments().getString("tabla"));
+                fragment.setArguments(datos);
+
+
+                if (fragment != null) {
+                    FragmentManager fragmentManager = getFragmentManager();
+                    //fragmentManager.popBackStack("root_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    FragmentTransaction ft = fragmentManager.beginTransaction();
+                    ft.replace(R.id.screen_area, fragment).addToBackStack("root_fragment");
+                    ft.commit();
+                }
 
             }
         });
@@ -354,6 +420,49 @@ public class FragmentMuestraMensaje2 extends Fragment {
         }
     }
 
+    public String compruebaCategoria(String tabla,int id){
+
+        BDDHelper miHelper = new BDDHelper(getActivity());
+        String RAW_QUERY = "SELECT categoria FROM " + tabla +
+                " WHERE id = " + id;
+
+        //Para leer datos de la BBDD
+        SQLiteDatabase db2 = miHelper.getReadableDatabase();
+        //Ejecutar la consulta
+        Cursor cursor = db2.rawQuery(RAW_QUERY, null);
+        cursor.moveToFirst();
+
+        String categoria = cursor.getString(0);
+        //Toast.makeText(getActivity(),"categoria ====> "+categoria,Toast.LENGTH_LONG).show();
+
+        db2.close();
+       return categoria;
+
+
+    }
+
+    public void descategorizaMensaje(String tabla, int id){
+
+        BDDHelper miHelper = new BDDHelper(getActivity());
+        //Para poder manejar datos en la BBDD, tanto escribir como borrar
+        SQLiteDatabase db = miHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.putNull("categoria");
+
+        //Definir parte WHERE de la consulta
+        String selection2 =  "id LIKE ?";
+        //Definir argumentos de la consulta
+        String []selectionArgs2 = {String.valueOf(id)};
+        //Ejecutar la consulta
+        int count = db.update(
+                tabla,
+                values,
+                selection2,
+                selectionArgs2);
+
+
+
+    }
 
 
 }//end of class

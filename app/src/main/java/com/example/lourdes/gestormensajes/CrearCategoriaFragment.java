@@ -51,9 +51,9 @@ public class CrearCategoriaFragment extends Fragment {
         //Para conectar con la BBDD
         final BDDHelper miHelper = new BDDHelper(getActivity());
         //Traer elementos desde el layout
-        boton_crear = (Button) getActivity().findViewById(R.id.boton_crear_categoria);
-        boton_borrar = (Button)getActivity().findViewById(R.id.boton_borrar_categorias);
-        nombre_categoria = (EditText)getActivity(). findViewById(R.id.nombre_categoria);
+        boton_crear = (Button) view.findViewById(R.id.boton_crear_categoria);
+        boton_borrar = (Button)view.findViewById(R.id.boton_borrar_categorias);
+        nombre_categoria = (EditText)view.findViewById(R.id.nombre_categoria);
 
         //Poner a la escucha el botón de creación de categorías
         boton_crear.setOnClickListener(new View.OnClickListener() {
@@ -138,7 +138,7 @@ public class CrearCategoriaFragment extends Fragment {
               //  Intent intent = new Intent(getApplicationContext(),BorrarCategorias.class);
                 //Comenzar nueva actividad
                 //startActivity(intent);
-
+                Toast.makeText(getActivity(),"hola",Toast.LENGTH_LONG).show();
 
                 Fragment fragment = new BorrarCategoriasFragment();
                /* Bundle datos = new Bundle();
@@ -150,7 +150,7 @@ public class CrearCategoriaFragment extends Fragment {
                     FragmentManager fragmentManager = getFragmentManager();
                     //fragmentManager.popBackStack("root_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     FragmentTransaction ft = fragmentManager.beginTransaction();
-                    ft.replace(R.id.screen_area, fragment).addToBackStack("root_fragment");
+                   ft.replace(R.id.screen_area, fragment).addToBackStack("root_fragment");
                     ft.commit();
                 }
 

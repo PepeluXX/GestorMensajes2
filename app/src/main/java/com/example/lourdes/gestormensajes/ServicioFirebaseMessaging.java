@@ -240,6 +240,7 @@ public class ServicioFirebaseMessaging extends FirebaseMessagingService {
                             "titulo TEXT," +
                             "mensaje TEXT," +
                             "leido INTEGER," +
+                            "nota TEXT," +
                             "categoria TEXT)";
 
 
