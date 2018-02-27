@@ -26,6 +26,8 @@
             android:textStyle="bold"
             android:typeface="normal" />
 
+
+
         <TextView
             android:id="@+id/textViewDNI"
             android:layout_width="match_parent"
@@ -69,6 +71,12 @@
             android:inputType="textPassword"
             android:padding="@dimen/padding_main_activity"
             android:textSize="@dimen/texto_main_activity" />
+
+        <ProgressBar
+            android:id="@+id/barra"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/botonRegistro"

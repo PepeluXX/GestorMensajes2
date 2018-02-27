@@ -1,5 +1,6 @@
 package com.example.lourdes.gestormensajes;
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +61,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //Objeto de clase para acceder a la BBDD SQLite
     final BDDHelper mDbHelper = new BDDHelper(this);
 
+    //para el progreso de la conexión con el servidor
+    ProgressBar barra;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +74,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         editTextDNI = (EditText) findViewById(R.id.editTextDNI);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
         botonRegistro = (Button)findViewById(R.id.botonRegistro);
+        barra = (ProgressBar)findViewById(R.id.barra);
+
+        barra.setVisibility(View.GONE);
 
         //Se recoge el token, que se crea cuando se inicia la aplicación por primera vez
         String token = SharedPrefManager.getInstance(this).getToken();
@@ -200,11 +208,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 sesion = SharedPrefManager.getInstance(this).creaVariableSesion();
             }
 
+            //solo se cumplirá la primera vez que se inicie la aplicación si el registro es exitoso. También si se desisntala y reinstala la aplicación
             if(SharedPrefManager.getInstance(this).getToken() != null && registrado ==0){
 
                 //Configurar la petición POST que vamos a enviarle al servidor. Se crea un objeto de la clase StringRequest al que se
                 //le pasa para crearlo el método de la petición, la URL, un método que describe las acciones a realizar cuando se obtiene una
                 //respuesta del servidor y el método con acciones a realizar cuando se recibe un error (se recibe null)
+
+                barra.setVisibility(View.VISIBLE);
+
+
 
                 StringRequest stringRequest = new StringRequest(
 
@@ -226,6 +239,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     JSONObject obj = new JSONObject(response);
 
                                     //En 'message' se encuentra el código que indica el resultado de la petición
+                                    barra.setVisibility(View.GONE);
                                     respuesta_servidor = obj.getString("message");
                                     Toast.makeText(getApplicationContext(),"Respuesta servidor = "+respuesta_servidor,Toast.LENGTH_LONG).show();
                                     //Si el token y los datos de usuario se han registrado correctamente en el portal
@@ -484,6 +498,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     }//end if
                                     //Si el servidor devuelve un error en el registro de los datos
                                     else{
+                                        barra.setVisibility(View.GONE);
                                         Toast.makeText(getApplicationContext(),"El registro en el portal web ha fallado.",Toast.LENGTH_LONG).show();
                                     }
 
@@ -498,6 +513,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
+                                barra.setVisibility(View.GONE);
                                 Toast.makeText(getApplicationContext(),"No se ha podido conectar con el servidor. Respuesta = "+error.getMessage(),Toast.LENGTH_LONG).show();
                             }
                         }
@@ -532,6 +548,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }//todo si ya está registrado pero cerró sesión
             else if(SharedPrefManager.getInstance(this).getToken() != null && registrado ==1 && sesion == 0){
                 //todo comprobar usuario y password, si true--> iniciar lista mensajes y decir bienvenido de nuevo
+
+                barra.setVisibility(View.VISIBLE);
+
+
+
                 StringRequest stringRequest = new StringRequest(
 
                         //el método de la petición
@@ -553,6 +574,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                     //En 'message' se encuentra el código que indica el resultado de la petición
                                     respuesta_servidor = obj.getString("message");
+                                    barra.setVisibility(View.GONE);
                                     Toast.makeText(getApplicationContext(),"Respuesta servidor = "+respuesta_servidor,Toast.LENGTH_LONG).show();
                                     //Si el token y los datos de usuario se han registrado correctamente en el portal
 
@@ -579,6 +601,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     }//end if
                                     //Si el servidor devuelve un error en el registro de los datos
                                     else{
+                                        barra.setVisibility(View.GONE);
                                         Toast.makeText(getApplicationContext(),"La autenticación en el portal web ha fallado.",Toast.LENGTH_LONG).show();
                                     }
 
@@ -593,6 +616,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
+                                barra.setVisibility(View.GONE);
                                 Toast.makeText(getApplicationContext(),"No se ha podido conectar con el servidor. Respuesta = "+error.getMessage(),Toast.LENGTH_LONG).show();
                             }
                         }
@@ -629,6 +653,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             //Si la asignación de token en los servidores FCM de Google ha fallado
             else{
+                barra.setVisibility(View.GONE);
                 Toast.makeText(this,"El Token no se ha generado.",Toast.LENGTH_LONG).show();
             }
         }//end of else, el que se ejecutaba si la validación del formulario era correcta (se habían insertado valores y se habían mandado al servidor)
