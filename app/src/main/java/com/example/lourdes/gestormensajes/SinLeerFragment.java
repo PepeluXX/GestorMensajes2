@@ -68,18 +68,6 @@ public class SinLeerFragment extends Fragment {
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
         if(checker.size()>0) {
 
             //Definir layout principal, , y definir parámetros del layout

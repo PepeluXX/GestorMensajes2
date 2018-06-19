@@ -35,8 +35,8 @@ import java.util.Map;
 
 
 /**
- * La clase MainActivity es por donde comienza la aplicación. Muestra un formulario a rellenar.
- * Si los datos insertados son correctos. Dicho formulario no se presenta más.
+ * La clase MainActivity es por donde comienza la aplicación controla el flujo de la aplicación
+ * cada vez que se accede a esta
  *
  * @author  Jose Luis
  * @version 1.0

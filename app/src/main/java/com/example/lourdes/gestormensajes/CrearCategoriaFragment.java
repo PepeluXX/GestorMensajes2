@@ -124,6 +124,8 @@ public class CrearCategoriaFragment extends Fragment {
                     }
                     //Si la categoría ya existe se limpia el campo de texto
                     nombre_categoria.setText("");
+
+                    //todo dbl.close()
                 }
 
             }

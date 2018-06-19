@@ -175,7 +175,7 @@ public class ListaMensajes extends AppCompatActivity implements NavigationView.O
           drawer.closeDrawer(GravityCompat.START);
       } else {
           super.onBackPressed();
-
+          //todo cuando el usuario pulse atrás decirle que para salir pulse home
           /*
           AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Add the buttons

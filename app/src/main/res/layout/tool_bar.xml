@@ -39,7 +39,7 @@
     <ImageButton
         android:id="@+id/boton_crear_categoria"
         style="@style/botones"
-        android:src="@drawable/ic_crear_eliminar_cat_bar_drawable"
+        android:src="@drawable/ic_crear_categoria_menu"
         android:background="@color/colorPrimary"
         android:layout_gravity="center"
 

@@ -214,6 +214,7 @@ public class BorrarCategoriasFragment extends Fragment {
 
         Cursor cursor = db.rawQuery(RAW_QUERY,null);
         cursor.moveToFirst();
+
         ContentValues values = new ContentValues();
         values.putNull("categoria");
 
@@ -245,6 +246,7 @@ public class BorrarCategoriasFragment extends Fragment {
             ft.replace(R.id.screen_area, fragment).addToBackStack("root_fragment");
             ft.commit();
         }
+        //todo cerrar conexión con la bbdd
     }
 
 

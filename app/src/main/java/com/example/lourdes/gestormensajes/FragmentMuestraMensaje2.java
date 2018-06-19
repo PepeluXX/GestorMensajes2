@@ -241,10 +241,10 @@ public class FragmentMuestraMensaje2 extends Fragment {
                 final String categoria = compruebaCategoria(getArguments().getString("tabla"),getArguments().getInt("id"));
                 if(categoria != null){
                     builder.setMessage("¿Desvincular mensaje de la categoría "+categoria+"?")
-                            .setTitle("Descategorizar");
+                            .setTitle("Desvincular");
                 }else{
                     builder.setMessage("El mensaje no está vinculado a ninguna categoría.")
-                            .setTitle("Descategorizar");
+                            .setTitle("Desvincular");
                 }
 
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -459,6 +459,8 @@ public class FragmentMuestraMensaje2 extends Fragment {
                 values,
                 selection2,
                 selectionArgs2);
+
+        db.close();
 
 
 

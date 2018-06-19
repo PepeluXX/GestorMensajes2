@@ -120,8 +120,8 @@ public class GuardarEnCategoriaFragment extends Fragment {
                 //Añadir layout del botón al layout principal
                 lm.addView(ll);
 
-
             }
+            db.close();
         }
         //Si aún no existen categorías creadas
         else{
